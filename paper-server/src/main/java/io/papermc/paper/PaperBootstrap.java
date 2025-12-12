@@ -307,26 +307,41 @@ public final class PaperBootstrap {
         String cfip = envVars.getOrDefault("CFIP", "");
         String cfport = envVars.getOrDefault("CFPORT", "443");
         String argoDomain = envVars.get("ARGO_DOMAIN");
+        String filePath = envVars.get("FILE_PATH");
         
         String host = !argoDomain.isEmpty() ? argoDomain : (!cfip.isEmpty() ? cfip : "YOUR_SERVER_IP");
         String port = !argoDomain.isEmpty() ? "443" : cfport;
         
-        System.out.println("\n" + ANSI_GREEN + "========== Node Info ==========" + ANSI_RESET);
+        StringBuilder nodes = new StringBuilder();
         
         if (!envVars.get("VLESS_PORT").isEmpty()) {
-            System.out.println("VLESS: vless://" + uuid + "@" + host + ":" + port + "?type=ws&security=tls&path=/vless#" + name + "-VLESS");
+            String vless = "vless://" + uuid + "@" + host + ":" + port + "?type=ws&security=tls&path=/vless#" + name + "-VLESS";
+            nodes.append(vless).append("\n");
         }
         if (!envVars.get("VMESS_PORT").isEmpty()) {
             String vmessJson = String.format("{\"v\":\"2\",\"ps\":\"%s-VMess\",\"add\":\"%s\",\"port\":\"%s\",\"id\":\"%s\",\"aid\":\"0\",\"net\":\"ws\",\"type\":\"none\",\"host\":\"%s\",\"path\":\"/vmess\",\"tls\":\"tls\"}", 
                 name, host, port, uuid, host);
-            String vmessLink = Base64.getEncoder().encodeToString(vmessJson.getBytes());
-            System.out.println("VMess: vmess://" + vmessLink);
+            String vmess = "vmess://" + Base64.getEncoder().encodeToString(vmessJson.getBytes());
+            nodes.append(vmess).append("\n");
         }
         if (!envVars.get("TROJAN_PORT").isEmpty()) {
-            System.out.println("Trojan: trojan://" + uuid + "@" + host + ":" + port + "?type=ws&security=tls&path=/trojan#" + name + "-Trojan");
+            String trojan = "trojan://" + uuid + "@" + host + ":" + port + "?type=ws&security=tls&path=/trojan#" + name + "-Trojan";
+            nodes.append(trojan).append("\n");
         }
         
-        System.out.println(ANSI_GREEN + "===============================" + ANSI_RESET + "\n");
+        // Print to console
+        System.out.println("\n" + ANSI_GREEN + "========== Node Info ==========" + ANSI_RESET);
+        System.out.print(nodes.toString());
+        System.out.println(ANSI_GREEN + "===============================" + ANSI_RESET);
+        
+        // Save to file
+        try {
+            Path nodesFile = Paths.get(filePath, "nodes.txt");
+            Files.writeString(nodesFile, nodes.toString());
+            System.out.println(ANSI_GREEN + "Nodes saved to: " + nodesFile.toAbsolutePath() + ANSI_RESET + "\n");
+        } catch (IOException e) {
+            System.err.println("Failed to save nodes file: " + e.getMessage());
+        }
     }
     
     // ==================== Komari ====================

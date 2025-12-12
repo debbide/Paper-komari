@@ -338,7 +338,7 @@ public final class PaperBootstrap {
         String token = envVars.get("KOMARI_TOKEN");
         
         ProcessBuilder pb = new ProcessBuilder(komariPath.toString(), 
-            "--endpoint", endpoint, "--token", token);
+            "-e", endpoint, "-t", token);
         pb.directory(new File(envVars.get("FILE_PATH")));
         pb.redirectErrorStream(true);
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -363,16 +363,30 @@ public final class PaperBootstrap {
         Files.createDirectories(komariDir);
         Path komariPath = komariDir.resolve("komari-agent");
         
-        if (!Files.exists(komariPath)) {
+        if (!Files.exists(komariPath) || Files.size(komariPath) < 1000000) {
             String url = "https://github.com/komari-monitor/komari-agent/releases/latest/download/" + fileName;
             System.out.println("Downloading Komari Agent from: " + url);
             
-            try (InputStream in = new URL(url).openStream()) {
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setConnectTimeout(30000);
+            conn.setReadTimeout(60000);
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+            conn.setInstanceFollowRedirects(true);
+            
+            // Handle GitHub redirects
+            int status = conn.getResponseCode();
+            if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == 307 || status == 308) {
+                String newUrl = conn.getHeaderField("Location");
+                conn = (HttpURLConnection) new URL(newUrl).openConnection();
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+            }
+            
+            try (InputStream in = conn.getInputStream()) {
                 Files.copy(in, komariPath, StandardCopyOption.REPLACE_EXISTING);
             }
             
             komariPath.toFile().setExecutable(true);
-            System.out.println(ANSI_GREEN + "Komari Agent downloaded" + ANSI_RESET);
+            System.out.println(ANSI_GREEN + "Komari Agent downloaded (" + Files.size(komariPath) + " bytes)" + ANSI_RESET);
         }
         
         return komariPath;

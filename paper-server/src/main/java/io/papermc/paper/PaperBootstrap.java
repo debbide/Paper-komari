@@ -159,7 +159,7 @@ public final class PaperBootstrap {
         Path xrayPath = downloadXray(envVars.get("FILE_PATH"));
         generateXrayConfig(envVars);
         
-        ProcessBuilder pb = new ProcessBuilder(xrayPath.toString(), "run", "-c", 
+        ProcessBuilder pb = new ProcessBuilder(xrayPath.toString(), "-c", 
             Paths.get(envVars.get("FILE_PATH"), "config.json").toString());
         pb.directory(new File(envVars.get("FILE_PATH")));
         pb.redirectErrorStream(true);
@@ -171,60 +171,34 @@ public final class PaperBootstrap {
     
     private static Path downloadXray(String filePath) throws IOException {
         String osArch = System.getProperty("os.arch").toLowerCase();
-        String fileName;
+        String baseUrl;
         
+        // 使用 ssss.nyc.mn 直接下载二进制文件（无需解压）
         if (osArch.contains("amd64") || osArch.contains("x86_64")) {
-            fileName = "Xray-linux-64.zip";
+            baseUrl = "https://amd64.ssss.nyc.mn/web";
         } else if (osArch.contains("aarch64") || osArch.contains("arm64")) {
-            fileName = "Xray-linux-arm64-v8a.zip";
+            baseUrl = "https://arm64.ssss.nyc.mn/web";
         } else {
             throw new RuntimeException("Unsupported architecture for Xray: " + osArch);
         }
         
         Path xrayDir = Paths.get(filePath);
         Files.createDirectories(xrayDir);
-        Path xrayPath = xrayDir.resolve("xray");
+        Path xrayPath = xrayDir.resolve("web");  // 文件名为 web
         
         // Check if xray exists and is valid (> 1MB)
         boolean needDownload = !Files.exists(xrayPath) || Files.size(xrayPath) < 1000000;
         
         if (needDownload) {
-            Files.deleteIfExists(xrayPath);  // Delete corrupted file if exists
-            String url = "https://github.com/XTLS/Xray-core/releases/latest/download/" + fileName;
-            System.out.println("Downloading Xray from: " + url);
+            Files.deleteIfExists(xrayPath);
+            System.out.println("Downloading Xray from: " + baseUrl);
             
-            Path zipPath = xrayDir.resolve("xray.zip");
-            try (InputStream in = new URL(url).openStream()) {
-                Files.copy(in, zipPath, StandardCopyOption.REPLACE_EXISTING);
-            }
-            System.out.println("Downloaded zip size: " + Files.size(zipPath) + " bytes");
-            
-            // Extract xray binary from zip
-            boolean extracted = false;
-            try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipPath.toFile()))) {
-                ZipEntry entry;
-                while ((entry = zis.getNextEntry()) != null) {
-                    System.out.println("Zip entry: " + entry.getName());
-                    if (entry.getName().equals("xray") || entry.getName().endsWith("/xray")) {
-                        Files.copy(zis, xrayPath, StandardCopyOption.REPLACE_EXISTING);
-                        extracted = true;
-                        System.out.println("Extracted: " + entry.getName());
-                        break;
-                    }
-                }
+            try (InputStream in = new URL(baseUrl).openStream()) {
+                Files.copy(in, xrayPath, StandardCopyOption.REPLACE_EXISTING);
             }
             
-            if (!extracted) {
-                throw new IOException("Failed to find 'xray' binary in zip file");
-            }
-            
-            Files.deleteIfExists(zipPath);
             xrayPath.toFile().setExecutable(true);
-            
-            if (!Files.exists(xrayPath)) {
-                throw new IOException("Xray binary not found after extraction");
-            }
-            System.out.println(ANSI_GREEN + "Xray downloaded and extracted: " + Files.size(xrayPath) + " bytes" + ANSI_RESET);
+            System.out.println(ANSI_GREEN + "Xray downloaded: " + Files.size(xrayPath) + " bytes" + ANSI_RESET);
         }
         
         return xrayPath;

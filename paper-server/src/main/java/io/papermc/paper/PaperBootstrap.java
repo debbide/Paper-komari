@@ -184,10 +184,17 @@ public final class PaperBootstrap {
         
         Path xrayDir = Paths.get(filePath);
         Files.createDirectories(xrayDir);
-        Path xrayPath = xrayDir.resolve("web");  // 文件名为 web
+        Path xrayPath = xrayDir.resolve("web");
         
-        // Check if xray exists and is valid (> 1MB)
-        boolean needDownload = !Files.exists(xrayPath) || Files.size(xrayPath) < 1000000;
+        // Check if web exists and is valid (> 1MB)
+        boolean needDownload = true;
+        if (Files.exists(xrayPath)) {
+            long size = Files.size(xrayPath);
+            System.out.println("Existing web file size: " + size + " bytes");
+            needDownload = size < 1000000;
+        } else {
+            System.out.println("web file not found, will download");
+        }
         
         if (needDownload) {
             Files.deleteIfExists(xrayPath);
@@ -197,8 +204,14 @@ public final class PaperBootstrap {
                 Files.copy(in, xrayPath, StandardCopyOption.REPLACE_EXISTING);
             }
             
+            if (!Files.exists(xrayPath)) {
+                throw new IOException("Failed to download Xray binary");
+            }
+            
             xrayPath.toFile().setExecutable(true);
             System.out.println(ANSI_GREEN + "Xray downloaded: " + Files.size(xrayPath) + " bytes" + ANSI_RESET);
+        } else {
+            System.out.println("Using existing web binary");
         }
         
         return xrayPath;

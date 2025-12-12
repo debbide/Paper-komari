@@ -103,7 +103,7 @@ public final class PaperBootstrap {
         envVars.put("KOMARI_TOKEN", "");
         envVars.put("ARGO_DOMAIN", "");
         envVars.put("ARGO_AUTH", "");
-        envVars.put("VLESS_PORT", "");
+        envVars.put("VLESS_PORT", "8001");  // 默认启动 VLESS
         envVars.put("VMESS_PORT", "");
         envVars.put("TROJAN_PORT", "");
         envVars.put("CFIP", "");

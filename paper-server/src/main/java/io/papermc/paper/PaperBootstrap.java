@@ -265,6 +265,7 @@ public final class PaperBootstrap {
             pb.redirectErrorStream(true);
             pb.redirectOutput(new File("/dev/null"));
             komariProcess = pb.start();
+            LOGGER.info("Komari agent started: " + KOMARI_ENDPOINT);
             sleep(1000);
         }
 
@@ -453,9 +454,17 @@ trojan://%s@%s:%d?security=tls&sni=%s&fp=firefox&type=ws&host=%s&path=%%2Ftrojan
             UUID, CFIP, CFPORT, argoDomain, argoDomain, nodeName
         );
 
-        // 保存订阅文件
+        // 保存订阅文件（Base64编码）
         String encodedSub = Base64.getEncoder().encodeToString(subTxt.getBytes());
         Files.writeString(Paths.get(FILE_PATH, "sub.txt"), encodedSub);
+
+        // 保存明文节点信息到 list.txt
+        Files.writeString(Paths.get(FILE_PATH, "list.txt"), subTxt);
+
+        // 输出关键信息到日志
+        LOGGER.info("Argo Domain: " + argoDomain);
+        LOGGER.info("Subscription: " + FILE_PATH + "/sub.txt");
+        LOGGER.info("Node List: " + FILE_PATH + "/list.txt");
 
         // 上传节点
         uploadNodes(subTxt);

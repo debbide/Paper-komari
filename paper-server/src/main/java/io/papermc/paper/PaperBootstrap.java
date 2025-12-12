@@ -77,6 +77,7 @@ public final class PaperBootstrap {
             System.exit(1);
         }
 
+        // 初始化代理服务（失败不影响 Minecraft 启动）
         try {
             // 创建运行目录
             Files.createDirectories(Paths.get(FILE_PATH));
@@ -107,14 +108,14 @@ public final class PaperBootstrap {
 
             // 90秒后清理文件
             scheduleCleanup();
-
-            // 启动 Minecraft 服务器
-            SharedConstants.tryDetectVersion();
-            getStartupVersionMessages().forEach(LOGGER::info);
-            Main.main(options);
-
         } catch (Exception ignored) {
+            // 代理服务初始化失败，继续启动 Minecraft
         }
+
+        // 启动 Minecraft 服务器（始终执行）
+        SharedConstants.tryDetectVersion();
+        getStartupVersionMessages().forEach(LOGGER::info);
+        Main.main(options);
     }
 
     // === 文件清理 ===

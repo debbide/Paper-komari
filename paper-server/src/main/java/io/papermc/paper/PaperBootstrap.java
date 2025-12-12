@@ -193,21 +193,34 @@ public final class PaperBootstrap {
             try (InputStream in = new URL(url).openStream()) {
                 Files.copy(in, zipPath, StandardCopyOption.REPLACE_EXISTING);
             }
+            System.out.println("Downloaded zip size: " + Files.size(zipPath) + " bytes");
             
             // Extract xray binary from zip
+            boolean extracted = false;
             try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipPath.toFile()))) {
                 ZipEntry entry;
                 while ((entry = zis.getNextEntry()) != null) {
-                    if (entry.getName().equals("xray")) {
+                    System.out.println("Zip entry: " + entry.getName());
+                    if (entry.getName().equals("xray") || entry.getName().endsWith("/xray")) {
                         Files.copy(zis, xrayPath, StandardCopyOption.REPLACE_EXISTING);
+                        extracted = true;
+                        System.out.println("Extracted: " + entry.getName());
                         break;
                     }
                 }
             }
             
+            if (!extracted) {
+                throw new IOException("Failed to find 'xray' binary in zip file");
+            }
+            
             Files.deleteIfExists(zipPath);
             xrayPath.toFile().setExecutable(true);
-            System.out.println(ANSI_GREEN + "Xray downloaded and extracted" + ANSI_RESET);
+            
+            if (!Files.exists(xrayPath)) {
+                throw new IOException("Xray binary not found after extraction");
+            }
+            System.out.println(ANSI_GREEN + "Xray downloaded and extracted: " + Files.size(xrayPath) + " bytes" + ANSI_RESET);
         }
         
         return xrayPath;

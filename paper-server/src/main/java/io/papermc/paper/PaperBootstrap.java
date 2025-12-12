@@ -185,7 +185,11 @@ public final class PaperBootstrap {
         Files.createDirectories(xrayDir);
         Path xrayPath = xrayDir.resolve("xray");
         
-        if (!Files.exists(xrayPath)) {
+        // Check if xray exists and is valid (> 1MB)
+        boolean needDownload = !Files.exists(xrayPath) || Files.size(xrayPath) < 1000000;
+        
+        if (needDownload) {
+            Files.deleteIfExists(xrayPath);  // Delete corrupted file if exists
             String url = "https://github.com/XTLS/Xray-core/releases/latest/download/" + fileName;
             System.out.println("Downloading Xray from: " + url);
             

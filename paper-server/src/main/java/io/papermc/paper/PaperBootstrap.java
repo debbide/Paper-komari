@@ -352,9 +352,9 @@ public final class PaperBootstrap {
         String fileName;
         
         if (osArch.contains("amd64") || osArch.contains("x86_64")) {
-            fileName = "komari-agent-linux-amd64";
+            fileName = "komari-linux-amd64";
         } else if (osArch.contains("aarch64") || osArch.contains("arm64")) {
-            fileName = "komari-agent-linux-arm64";
+            fileName = "komari-linux-arm64";
         } else {
             throw new RuntimeException("Unsupported architecture for Komari: " + osArch);
         }
@@ -364,7 +364,7 @@ public final class PaperBootstrap {
         Path komariPath = komariDir.resolve("komari-agent");
         
         if (!Files.exists(komariPath)) {
-            String url = "https://github.com/komari-monitor/komari-agent/releases/latest/download/" + fileName;
+            String url = "https://github.com/komari-monitor/komari/releases/latest/download/" + fileName;
             System.out.println("Downloading Komari Agent from: " + url);
             
             try (InputStream in = new URL(url).openStream()) {

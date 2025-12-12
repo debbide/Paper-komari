@@ -159,9 +159,14 @@ public final class PaperBootstrap {
         Path xrayPath = downloadXray(envVars.get("FILE_PATH"));
         generateXrayConfig(envVars);
         
-        ProcessBuilder pb = new ProcessBuilder(xrayPath.toString(), "-c", 
-            Paths.get(envVars.get("FILE_PATH"), "config.json").toString());
-        pb.directory(new File(envVars.get("FILE_PATH")));
+        // 使用绝对路径
+        String xrayAbsPath = xrayPath.toAbsolutePath().toString();
+        String configAbsPath = Paths.get(envVars.get("FILE_PATH"), "config.json").toAbsolutePath().toString();
+        
+        System.out.println("Starting Xray: " + xrayAbsPath);
+        System.out.println("Config: " + configAbsPath);
+        
+        ProcessBuilder pb = new ProcessBuilder(xrayAbsPath, "-c", configAbsPath);
         pb.redirectErrorStream(true);
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         

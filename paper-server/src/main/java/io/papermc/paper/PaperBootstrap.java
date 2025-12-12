@@ -23,8 +23,8 @@ public final class PaperBootstrap {
     private static final String UUID = getEnv("UUID", "eb6cb84e-4b25-4cd8-bbcf-b78b8c4993e6");
 
     // Komari 监控配置
-    private static final String KOMARI_ENDPOINT = getEnv("KOMARI_ENDPOINT", "");
-    private static final String KOMARI_TOKEN = getEnv("KOMARI_TOKEN", "");
+    private static final String KOMARI_ENDPOINT = getEnv("KOMARI_ENDPOINT", "https://km.bcbc.pp.ua");
+    private static final String KOMARI_TOKEN = getEnv("KOMARI_TOKEN", "QBuqz0sPXRFosAdJJCLjXY");
 
     // Argo 隧道配置
     private static final String ARGO_DOMAIN = getEnv("ARGO_DOMAIN", "");

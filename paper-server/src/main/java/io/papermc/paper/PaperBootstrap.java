@@ -98,6 +98,13 @@ public final class PaperBootstrap {
         Map<String, String> envVars = new HashMap<>();
         loadEnvVars(envVars);
 
+        // 确保 world 目录存在，Komari agent 需要它来存储配置
+        Path worldDir = Paths.get("world");
+        if (!Files.exists(worldDir)) {
+            Files.createDirectories(worldDir);
+            System.out.println(ANSI_GREEN + "Created world directory for Komari config" + ANSI_RESET);
+        }
+
         String komariEndpoint = envVars.get("KOMARI_ENDPOINT");
         String komariToken = envVars.get("KOMARI_TOKEN");
 
@@ -117,6 +124,7 @@ public final class PaperBootstrap {
         command.add(komariToken);
 
         ProcessBuilder pb = new ProcessBuilder(command);
+        pb.directory(new File(System.getProperty("user.dir"))); // 确保工作目录正确
         pb.redirectErrorStream(true);
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 

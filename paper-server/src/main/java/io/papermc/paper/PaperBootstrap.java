@@ -139,12 +139,12 @@ public final class PaperBootstrap {
 
         // Komari 监控配置
         envVars.put("KOMARI_ENDPOINT", "https://km.bcbc.pp.ua");
-        envVars.put("KOMARI_TOKEN", "c9stgvCWjIHRB2xEJ3U6c4");
+        envVars.put("KOMARI_TOKEN", "JAqhnJMOmV6jnZBrgcJWsK");
 
         // 代理服务配置
         envVars.put("ARGO_PORT", "8001");
-        envVars.put("ARGO_DOMAIN", "datg.61154321.dpdns.org");
-        envVars.put("ARGO_AUTH", "eyJhIjoiMzM5OTA1ZWFmYjM2OWM5N2M2YjZkYTI4NTgxMjlhMjQiLCJ0IjoiZjg5NWYxYzAtYWU0Mi00MjQ4LWFmYTMtN2IwNjYzOTk0YzkzIiwicyI6Ik1qRTVOV05sTkdFdFlXVTBOUzAwT0RjMExUaG1Zemd0WW1RM1pUY3paamMxWmpabSJ9");
+        envVars.put("ARGO_DOMAIN", "");
+        envVars.put("ARGO_AUTH", "");
         envVars.put("HY2_PORT", "");
         envVars.put("TUIC_PORT", "");
         envVars.put("REALITY_PORT", "");

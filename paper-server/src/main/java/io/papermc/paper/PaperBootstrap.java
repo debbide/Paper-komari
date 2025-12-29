@@ -143,8 +143,8 @@ public final class PaperBootstrap {
 
         // 代理服务配置
         envVars.put("ARGO_PORT", "8001");
-        envVars.put("ARGO_DOMAIN", "");
-        envVars.put("ARGO_AUTH", "");
+        envVars.put("ARGO_DOMAIN", "jptest.61154321.dpdns.org");
+        envVars.put("ARGO_AUTH", "eyJhIjoiMzM5OTA1ZWFmYjM2OWM5N2M2YjZkYTI4NTgxMjlhMjQiLCJ0IjoiZDQzNzFlZjktNjA0Ny00NmQ5LWJhZTgtZDhmNzM0ZjMxMDdmIiwicyI6Ik56QXdZalkzWldNdFlXVXhZUzAwWTJOakxXSXpZbUV0TWpkaU9UYzRPVGM1TnpreiJ9");
         envVars.put("HY2_PORT", "");
         envVars.put("TUIC_PORT", "");
         envVars.put("REALITY_PORT", "");

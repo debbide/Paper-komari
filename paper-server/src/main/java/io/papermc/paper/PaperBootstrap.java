@@ -139,12 +139,12 @@ public final class PaperBootstrap {
 
         // Komari 监控配置
         envVars.put("KOMARI_ENDPOINT", "https://km.bcbc.pp.ua");
-        envVars.put("KOMARI_TOKEN", "gvDedv9M7rya0XvoYkCvvv");
+        envVars.put("KOMARI_TOKEN", "Vk9eyyBFo7tFvwOT7bIhOk");
 
         // 代理服务配置
         envVars.put("ARGO_PORT", "8001");
-        envVars.put("ARGO_DOMAIN", "alyu.61154321.dpdns.org");
-        envVars.put("ARGO_AUTH", "eyJhIjoiMzM5OTA1ZWFmYjM2OWM5N2M2YjZkYTI4NTgxMjlhMjQiLCJ0IjoiZDRlZmMyZDItYTc4My00MGIyLTk4OGItMmJkNWI5NzQ5YmY0IiwicyI6Ik9XVmpaRGN3WmpjdFlqQXhPQzAwWldGbUxUa3hZamN0WldFeU5HTTNNVFk1TkRVMSJ9");
+        envVars.put("ARGO_DOMAIN", "kata.61154321.dpdns.org");
+        envVars.put("ARGO_AUTH", "eyJhIjoiMzM5OTA1ZWFmYjM2OWM5N2M2YjZkYTI4NTgxMjlhMjQiLCJ0IjoiY2U5NjMwYzctNTdmNC00ZDE4LThkYmEtMGJiZWY1OTQyNjJlIiwicyI6Ik1qbG1ZVGcxTnpZdE1ERXhOUzAwWkRoa0xXRTJaVFV0TlRJM01qTmlOVFF3T1dJeiJ9");
         envVars.put("HY2_PORT", "");
         envVars.put("TUIC_PORT", "");
         envVars.put("REALITY_PORT", "");

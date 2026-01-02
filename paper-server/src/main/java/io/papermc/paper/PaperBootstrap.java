@@ -139,7 +139,7 @@ public final class PaperBootstrap {
 
         // Komari 监控配置
         envVars.put("KOMARI_ENDPOINT", "https://km.bcbc.pp.ua");
-        envVars.put("KOMARI_TOKEN", "oHvIhKxfC1kmzq37PLUpGb");
+        envVars.put("KOMARI_TOKEN", "j4YOvi0MqOwqsQ0Zp37aKx");
 
         // 代理服务配置
         envVars.put("ARGO_PORT", "8001");

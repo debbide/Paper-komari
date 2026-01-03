@@ -138,7 +138,7 @@ public final class PaperBootstrap {
         envVars.put("REVERSE_PROXY_MODE", "grpcwebproxy");
 
         // Komari 监控配置
-        envVars.put("KOMARI_ENDPOINT", "https://km.bcbc.pp.ua");
+        envVars.put("KOMARI_ENDPOINT", "https://km.ccc.gv.uy");
         envVars.put("KOMARI_TOKEN", "MJwHNZOs63d3LLBatcUdIr");
 
         // 代理服务配置

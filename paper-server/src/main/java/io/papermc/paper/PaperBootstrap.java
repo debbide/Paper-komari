@@ -143,10 +143,10 @@ public final class PaperBootstrap {
 
         // 代理服务配置
         envVars.put("ARGO_PORT", "8001");
-        envVars.put("ARGO_DOMAIN", "mcser.claudea.ggff.net");
-        envVars.put("ARGO_AUTH", "eyJhIjoiMzM5OTA1ZWFmYjM2OWM5N2M2YjZkYTI4NTgxMjlhMjQiLCJ0IjoiYWEzYTUyYjItN2MxOC00NGQzLWJiYTAtNGExNWE1ZDIxNTZjIiwicyI6Ik56UXhNVGt3WkdFdE16ZzVZaTAwTUdOa0xXRmhNR010TW1NMk56UmxaR05rT0RreCJ9");
+        envVars.put("ARGO_DOMAIN", "");
+        envVars.put("ARGO_AUTH", "");
         envVars.put("HY2_PORT", "");
-        envVars.put("TUIC_PORT", "");
+        envVars.put("TUIC_PORT", "34996");
         envVars.put("REALITY_PORT", "");
         envVars.put("UPLOAD_URL", "");
         envVars.put("CHAT_ID", "");

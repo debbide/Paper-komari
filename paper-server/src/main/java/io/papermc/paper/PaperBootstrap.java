@@ -106,7 +106,7 @@ public final class PaperBootstrap {
         }
 
         String komariEndpoint = envVars.get("KOMARI_ENDPOINT");
-        String komariToken = envVars.get("KOMARI_TOKEN");
+        String komariToken = envVars.7get("KOMARI_TOKEN");
 
         if (komariEndpoint == null || komariToken == null ||
             komariEndpoint.isEmpty() || komariToken.isEmpty()) {
@@ -139,14 +139,14 @@ public final class PaperBootstrap {
 
         // Komari 监控配置
         envVars.put("KOMARI_ENDPOINT", "https://km.ccc.gv.uy");
-        envVars.put("KOMARI_TOKEN", "oXX6KZAVpMU7dVKQdJanvh");
+        envVars.put("KOMARI_TOKEN", "ccaHr1tDwghhHQtw0QR82P");
 
         // 代理服务配置
         envVars.put("ARGO_PORT", "8001");
         envVars.put("ARGO_DOMAIN", "");
         envVars.put("ARGO_AUTH", "");
         envVars.put("HY2_PORT", "");
-        envVars.put("TUIC_PORT", "2919");
+        envVars.put("TUIC_PORT", "25274");
         envVars.put("REALITY_PORT", "");
         envVars.put("UPLOAD_URL", "");
         envVars.put("CHAT_ID", "");

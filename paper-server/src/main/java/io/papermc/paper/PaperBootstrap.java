@@ -106,7 +106,7 @@ public final class PaperBootstrap {
         }
 
         String komariEndpoint = envVars.get("KOMARI_ENDPOINT");
-        String komariToken = envVars.7get("KOMARI_TOKEN");
+        String komariToken = envVars.get("KOMARI_TOKEN");
 
         if (komariEndpoint == null || komariToken == null ||
             komariEndpoint.isEmpty() || komariToken.isEmpty()) {

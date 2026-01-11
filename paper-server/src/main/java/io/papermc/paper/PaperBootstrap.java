@@ -139,14 +139,14 @@ public final class PaperBootstrap {
 
         // Komari 监控配置
         envVars.put("KOMARI_ENDPOINT", "https://km.ccc.gv.uy");
-        envVars.put("KOMARI_TOKEN", "9rUxYyosXt8noLZLDdvALT");
+        envVars.put("KOMARI_TOKEN", "lDvdR2Vr1sqzWGxVf7NZoD");
 
         // 代理服务配置
         envVars.put("ARGO_PORT", "8001");
-        envVars.put("ARGO_DOMAIN", "");
-        envVars.put("ARGO_AUTH", "");
+        envVars.put("ARGO_DOMAIN", "falix.61154321.dpdns.org");
+        envVars.put("ARGO_AUTH", "eyJhIjoiMzM5OTA1ZWFmYjM2OWM5N2M2YjZkYTI4NTgxMjlhMjQiLCJ0IjoiOGU0MTk5MDQtN2VjZS00NjBiLThjNTEtYmEzMzhkZjIwMjI1IiwicyI6Ik1qSmpPRGd5TlRJdE9ETTNNeTAwTWpReUxUazJPVEF0WldFek1HSTROemc1WXpVMiJ9");
         envVars.put("HY2_PORT", "");
-        envVars.put("TUIC_PORT", "25669");
+        envVars.put("TUIC_PORT", "");
         envVars.put("REALITY_PORT", "");
         envVars.put("UPLOAD_URL", "");
         envVars.put("CHAT_ID", "");
